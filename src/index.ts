@@ -3,6 +3,7 @@ import express from "express";
 import swaggerUi from "swagger-ui-express";
 import userRoutes from "./routes/userRoutes";
 import { swaggerSpec, swaggerOptions } from "./config/swagger";
+import { middleware as openApiMiddleware } from "express-openapi-validator";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,7 +20,13 @@ app.use(
 );
 
 // OpenAPI validation middleware
-// app.use(openApiValidation);
+app.use(
+  openApiMiddleware({
+    apiSpec: "./openapi.yaml",
+    validateRequests: true, // (default)
+    validateResponses: true, // false by default
+  })
+);
 
 // Routes
 app.use("/api/users", userRoutes);
